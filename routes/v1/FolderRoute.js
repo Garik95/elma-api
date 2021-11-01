@@ -2,12 +2,18 @@ module.exports = (app) => {
     const Model = require('../../controllers/FolderController')
 
     var router = require("express").Router();
+    // create a document
+    router.post('/', Model.create);
     // return all documents
     router.get('/', Model.findAll);
-    router.post('/', Model.create);
-    // router.get('/all', Model.findAllNodes);
     // return specific document by ID
-    // router.get('/:id', Model.findById);
+    router.get('/:id', Model.findById);
+    // return childs
+    router.get('/:id/child', Model.findChild);
+    // modify document by ID
+    router.put('/:id', Model.updateById);
 
-    app.use('/api/v1/Folder',router);
+    router.delete('/:id', Model.removeById);
+
+    app.use('/api/v1/Folder', router);
 }

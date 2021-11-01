@@ -1,17 +1,29 @@
 module.exports = (mongoose) => {
-    return mongoose.model('Folder', new mongoose.Schema({
-        id: {
-            type: Number,
-            required: true,
-            unique: true
-        },
+    
+    folderSchema = new mongoose.Schema({
         parent: {
-            type: Number,
+            type: mongoose.Types.ObjectId,
             default: null
         },
         name: {
             type: String,
             required: true
+        },
+        createdAt: {
+            type: Number,
+            default: new Date()
+        },
+        createdBy: {
+            type: mongoose.Types.ObjectId
+        },
+        updatedAt: {
+            type: Number,
+            default: new Date()
+        },
+        updatedBy: {
+            type: mongoose.Types.ObjectId
         }
-    }))
+    });
+
+    return mongoose.model('Folder', folderSchema);
 }
