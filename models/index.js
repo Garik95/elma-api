@@ -13,6 +13,7 @@ const db = mongoose
     });
     
 db.Folder = require('./Folder')(mongoose);
+db.File = require('./File')(mongoose);
 
 
 module.exports = db;

@@ -10,7 +10,9 @@ exports.findAll = (req, res) => {
 }
 
 exports.findChild = (req, res) => {
-    Model.find({parent:req.params.id}).then(data => {
+    Model.find({
+        parent: req.params.id
+    }).then(data => {
         res.send(data)
     }).catch(err => {
         res.send(err);
@@ -26,7 +28,9 @@ exports.findById = (req, res) => {
 }
 
 exports.updateById = (req, res) => {
-    Model.updateOne({_id:req.params.id},req.body).then(data => {
+    Model.updateOne({
+        _id: req.params.id
+    }, req.body).then(data => {
         res.send(data)
     }).catch(err => {
         res.send(err);
@@ -43,14 +47,19 @@ exports.create = (req, res) => {
 }
 
 exports.removeById = (req, res) => {
-    Model.deleteOne({
-        _id: req.params.id,
-        parent: {
-            $ne: null
+    Model.find({
+        parent: req.params.id
+    }).then(result => {
+        if (result.length == 0) {
+            Model.deleteOne({
+                _id: req.params.id
+            }).then(data => {
+                res.send(data)
+            }).catch(err => {
+                res.send(err);
+            })
+        } else {
+            res.send({deletedCount:0})
         }
-    }).then(data => {
-        res.send(data)
-    }).catch(err => {
-        res.send(err);
     })
 }

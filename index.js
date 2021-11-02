@@ -2,10 +2,11 @@ require('./models/index.js');
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+const fileUpload = require('express-fileupload');
 
 app.use(cors());
-
+app.use(fileUpload());
+app.use(express.static('uploads'))
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({
 
 // routesss!!!!
 require('./routes/v1/FolderRoute')(app);
+require('./routes/v1/FileRoute')(app);
 
 // handle undefined routes
 app.use("*", (req, res) => {
