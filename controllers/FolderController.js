@@ -9,6 +9,23 @@ exports.findAll = (req, res) => {
     })
 }
 
+exports.findParent = async (req, res) => {
+    var doc = await findById(req.params.id)
+    var result = []
+    result.push({
+        text: doc.name,
+        href: String(doc._id)
+    })
+    while (doc.parent != null) {
+        doc = await findById(doc.parent)
+        result.unshift({
+            text: doc.name,
+            href: String(doc._id)
+        })
+    }
+    res.send(result);
+}
+
 exports.findChild = (req, res) => {
     Model.find({
         parent: req.params.id
@@ -59,7 +76,20 @@ exports.removeById = (req, res) => {
                 res.send(err);
             })
         } else {
-            res.send({deletedCount:0})
+            res.send({
+                deletedCount: 0
+            })
         }
+    })
+}
+
+function findById(id) {
+    return new Promise(resolve => {
+        Model.findById(id)
+            .then(data => {
+                resolve(data);
+            }).catch(err => {
+                resolve(err);
+            })
     })
 }

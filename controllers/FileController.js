@@ -4,11 +4,27 @@ const path = require('path')
 
 
 exports.findAll = (req, res) => {
-    Model.find().then(data => {
-        res.send(data)
-    }).catch(err => {
-        res.send(err);
-    })
+    console.log(req.query);
+    if (!req.query)
+        Model.find().then(data => {
+            res.send(data)
+        }).catch(err => {
+            res.send(err);
+        })
+    else {
+        var reg = `/.*${req.query.searchTerm}.*/`;
+        Model.find({
+            originalName: {
+                $regex: '.*' + req.query.searchTerm + '*.',
+                $options: 'i'
+            }
+        }).then(data => {
+            res.send(data)
+        }).catch(err => {
+            console.log("err", err);
+            res.send(err);
+        })
+    }
 }
 exports.findById = (req, res) => {
     Model.findById(req.params.id).then(data => {
@@ -30,7 +46,6 @@ exports.updateById = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    console.log(req.files);
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
@@ -45,8 +60,7 @@ exports.create = (req, res) => {
             file.mv(uploadPath, function (err) {
                 if (err)
                     return res.status(500).send(err);
-
-                res.send('File uploaded!');
+                res.send(result);
             });
         }
     })

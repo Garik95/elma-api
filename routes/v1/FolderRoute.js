@@ -8,6 +8,8 @@ module.exports = (app) => {
     router.get('/', Model.findAll);
     // return specific document by ID
     router.get('/:id', Model.findById);
+    // return parent
+    router.get('/:id/parent', Model.findParent);
     // return childs
     router.get('/:id/child', Model.findChild);
     // modify document by ID
